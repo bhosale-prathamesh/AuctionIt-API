@@ -10,7 +10,7 @@ def predict():
     user_id = request.args.get('user_id', type = str)
 
     print(user_id)
-    path = os.path.join("D:\Githhub Projects\Recommendation-API\model_v1")
+    path = os.path.join(os.getcwd(),"model_v1")
 
     loaded = tf.keras.models.load_model(path)
 

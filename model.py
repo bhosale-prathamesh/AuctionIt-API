@@ -158,7 +158,7 @@ if __name__ == "__main__":
 
   index = tfrs.layers.factorized_top_k.BruteForce(model.user_model,k=7)
   index = index.index_from_dataset(candidates=item.batch(100).map(lambda ItemId : (ItemId, model.item_model(ItemId))))
-  path = os.path.join("D:\Githhub Projects\AuctionIt-API\model_v1")
+  path = os.path.join(os.getcwd(),"model_v1")
   
   _, titles = index(tf.constant(["test"]))
   index.save(path,"model_v1")
