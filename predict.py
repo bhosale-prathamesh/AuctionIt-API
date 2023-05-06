@@ -2,6 +2,8 @@ from flask import Flask
 import tensorflow as tf
 import os
 from flask import request
+import json
+from model import train
 
 app = Flask(__name__)
 
@@ -15,9 +17,14 @@ def predict():
     loaded = tf.keras.models.load_model(path)
 
     scores, titles = loaded([str(user_id)])
+    
+    l = list(map(str,titles[0].numpy()))
+    jsonStr = json.dumps(l)
+    return jsonStr
 
-    return ' '.join(list(map(str,titles[0].numpy()))) + user_id
-
-    # return "Hello, World!"
+@app.route("/update")
+def update_model():
+    return train()
+   
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=105)

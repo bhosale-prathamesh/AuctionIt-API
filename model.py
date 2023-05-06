@@ -21,7 +21,7 @@ def get_database():
 
 class MovielensModel(tfrs.models.Model):
 
-  def __init__(self, rating_weight: float, retrieval_weight: float) -> None:
+  def __init__(self, rating_weight: float, retrieval_weight: float, item, item_ids, user_ids) -> None:
     # We take the loss weights in the constructor: this allows us to instantiate
     # several model objects with different loss weights.
 
@@ -32,13 +32,13 @@ class MovielensModel(tfrs.models.Model):
     # User and movie models.
     self.item_model: tf.keras.layers.Layer = tf.keras.Sequential([
       tf.keras.layers.experimental.preprocessing.StringLookup(
-        vocabulary=unique_item_ids, mask_token=None),
-      tf.keras.layers.Embedding(len(unique_item_ids) + 1, embedding_dimension)
+        vocabulary=item_ids, mask_token=None),
+      tf.keras.layers.Embedding(len(item_ids) + 1, embedding_dimension)
     ])
     self.user_model: tf.keras.layers.Layer = tf.keras.Sequential([
       tf.keras.layers.experimental.preprocessing.StringLookup(
-        vocabulary=unique_user_ids, mask_token=None),
-      tf.keras.layers.Embedding(len(unique_user_ids) + 1, embedding_dimension)
+        vocabulary=user_ids, mask_token=None),
+      tf.keras.layers.Embedding(len(user_ids) + 1, embedding_dimension)
     ])
 
     # A small model to take in user and movie embeddings and predict ratings.
@@ -97,7 +97,7 @@ class MovielensModel(tfrs.models.Model):
     return (self.rating_weight * rating_loss
 
             + self.retrieval_weight * retrieval_loss)
-if __name__ == "__main__":
+def train():
   dbname = get_database()
 
   collection_name = dbname['recommendations']
@@ -146,7 +146,7 @@ if __name__ == "__main__":
   unique_user_ids = np.unique(np.concatenate(list(user_ids)))
 
 
-  model = MovielensModel(rating_weight=1.0, retrieval_weight=0.0)
+  model = MovielensModel(rating_weight=1.0, retrieval_weight=1.0,item=item, item_ids = unique_item_ids, user_ids = unique_user_ids)
   model.compile(optimizer=tf.keras.optimizers.Adagrad(0.1))
 
   
@@ -165,3 +165,4 @@ if __name__ == "__main__":
   print(titles)
   # tf.saved_model.save(index, "D:\Githhub Projects\Recommendation-API\model_v1")
   # index.save(path,"model_v1")
+  return "Model Trained Successfully"
