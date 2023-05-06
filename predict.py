@@ -19,6 +19,7 @@ def predict():
     scores, titles = loaded([str(user_id)])
     
     l = list(map(str,titles[0].numpy()))
+    l = [x[2:-1] for x in l]
     jsonStr = json.dumps(l)
     return jsonStr
 
