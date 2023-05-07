@@ -156,7 +156,7 @@ def train():
 
   model.fit(cached_train, epochs=3)
 
-  index = tfrs.layers.factorized_top_k.BruteForce(model.user_model,k=7)
+  index = tfrs.layers.factorized_top_k.BruteForce(model.user_model,k=len(unique_item_ids))
   index = index.index_from_dataset(candidates=item.batch(100).map(lambda ItemId : (ItemId, model.item_model(ItemId))))
   path = os.path.join(os.getcwd(),"model_v1")
   
@@ -166,3 +166,4 @@ def train():
   # tf.saved_model.save(index, "D:\Githhub Projects\Recommendation-API\model_v1")
   # index.save(path,"model_v1")
   return "Model Trained Successfully"
+train()
