@@ -43,7 +43,7 @@ def predict():
             f.append(item[0])
     new_ads = list(collection_name.find())[::-1]
     for i in new_ads:
-        if i not in l:
+        if (str(i["_id"]) not in l) and (not i['auctionEnded']):
             f.append(i)
     jsonStr = json.dumps(f,default=str)
     return jsonStr
