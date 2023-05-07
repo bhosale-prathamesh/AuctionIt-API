@@ -40,8 +40,8 @@ def predict():
     for id in l:
         item = list(collection_name.find({"_id":ObjectId(id)}))
         if not item[0]['auctionEnded']:
-            f.append(id)
-    jsonStr = json.dumps(f)
+            f.append(item[0])
+    jsonStr = json.dumps(f,default=str)
     return jsonStr
 
 @app.route("/update")
