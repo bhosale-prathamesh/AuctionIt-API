@@ -166,4 +166,3 @@ def train():
   # tf.saved_model.save(index, "D:\Githhub Projects\Recommendation-API\model_v1")
   # index.save(path,"model_v1")
   return "Model Trained Successfully"
-train()
