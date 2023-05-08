@@ -59,7 +59,7 @@ def predict():
     new_ads = list(collection_name.find())[::-1]
     for i in new_ads:
         if (str(i["_id"]) not in l) and (not i['auctionEnded']):
-            i['_id'] = (i['_id'])
+            i['_id'] = str(i['_id'])
             i['owner'] = str(i['owner'])
             i['room'] = str(i['room'])
             i['createdAt'] = str(i['createdAt'])
