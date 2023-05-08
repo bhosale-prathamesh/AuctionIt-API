@@ -3,10 +3,20 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import tensorflow as tf
 import os
+from bson.json_util import dumps
 from flask import request
 from flask_cors import CORS
 import json
 from model import train
+import json
+from bson import ObjectId
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 
 app = Flask(__name__)
 CORS(app)
@@ -38,14 +48,25 @@ def predict():
     collection_name = dbname['ads']
     f = []
     for id in l:
-        item = list(collection_name.find({"_id":ObjectId(id)}))
-        if not item[0]['auctionEnded']:
-            f.append(item[0])
+        item = list(collection_name.find({"_id":ObjectId(id)}))[0]
+        if not item['auctionEnded']:
+            item['_id'] = str(item['_id'])
+            item['owner'] = str(item['owner'])
+            item['room'] = str(item['room'])
+            item['createdAt'] = str(item['createdAt'])
+            item['updatedAt'] = str(item['updatedAt'])
+            f.append(item)
     new_ads = list(collection_name.find())[::-1]
     for i in new_ads:
         if (str(i["_id"]) not in l) and (not i['auctionEnded']):
+            i['_id'] = (i['_id'])
+            i['owner'] = str(i['owner'])
+            i['room'] = str(i['room'])
+            i['createdAt'] = str(i['createdAt'])
+            i['updatedAt'] = str(i['updatedAt'])
             f.append(i)
-    jsonStr = json.dumps(f,default=str)
+    
+    jsonStr = dumps(f)
     return jsonStr
 
 @app.route("/update")
